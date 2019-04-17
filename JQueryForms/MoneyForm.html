@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>JQuery In-Class Coding</title>
+    <style>
+	body {
+    font-family: Calibri, arial;
+    color: black;
+	}
+
+	#DivContainer {
+		background-color: whitesmoke;
+		border: 2px orange solid;
+		width: 610px;
+		margin-left: auto;
+		margin-right: auto;
+		padding:0px 10px 10px 20px;
+	}
+	#DivMessage {
+		text-align: center;
+		font-weight:bold;
+		color:maroon;
+		text-size:16px;
+	}
+	.orange {
+		color: #FFD1AA;
+	}
+
+	.center {
+		text-align: center;
+	}
+
+	.errorMessage {
+		color: red;
+		font-weight: bold;
+	}
+
+	.halfTable {
+		width: 600px;
+	}
+	</style>
+</head>
+<body>
+	<div id="DivContainer">
+	<h2 class="center">Input your average walking around money</h2>
+    <table id="TblRadioButtonsA" class="halfTable">
+        <tr>
+            <td><h3 class="center">Dollars</h3></td>
+        </tr>
+        <tr>
+            <td>
+                <input id="RBFiveHun" value="500.00" type="radio" name="RGmoney" /><label for="RBFiveHun">$ 500.00</label></td>
+        </tr>
+        <tr>
+            <td>
+                <input id="RBOneHun" value="100.00" type="radio" name="RGmoney" /><label for="RBOneHun">$ 100.00</label></td>
+        </tr>
+        <tr>
+            <td>
+                <input id="RBFifty" value="50.00" type="radio" name="RGmoney" /><label for="RBFifty">$ 50.00</label></td>
+        </tr>
+		<td>
+                <input id="RBTwenty" value="20.00" type="radio" name="RGmoney" /><label for="RBTwenty">$ 20.00</label></td>
+        </tr>
+		<td>
+                <input id="RBTen" value="10.00" type="radio" name="RGmoney" /><label for="RBTen">$ 10.00</label></td>
+        </tr>
+		<td>
+                <input id="RBFive" value="5.00" type="radio" name="RGmoney" /><label for="RBFive">$ 5.00</label></td>
+        </tr>
+		<td>
+                <input id="RBOne" value="1.00" type="radio" name="RGmoney" /><label for="RBOne">$ 1.00</label></td>
+        </tr>
+
+    </table>
+	<h3 class="center">Coins</h3>
+    <input id="CBQ" type="checkbox" value=".25" name="TBQqty" />
+    <label for="CBQ">.25 cents</label>&nbsp;x&nbsp;
+    <input id="TBQqty" type="text" class="TBSmall" />&nbsp;
+    <span id="DivErrorTBQqty" class="errorMessage"></span>
+    <br />
+    <input id="CBD" type="checkbox" value=".10" name="TBDqty" />
+    <label for="CBD">.10 cents</label>&nbsp;x&nbsp;
+    <input id="TBDqty" type="text" />&nbsp;
+	    <span id="DivErrorTBDqty" class="errorMessage"></span>
+    <br />
+	<input id="CBN" type="checkbox" value=".05" name="TBNqty" />
+    <label for="CBN">.05 cents</label>&nbsp;x&nbsp;
+    <input id="TBNqty" type="text" />&nbsp;
+	    <span id="DivErrorTBNqty" class="errorMessage"></span>
+    <br />
+	<input id="CBP" type="checkbox" value=".01" name="TBPqty" />
+    <label for="CBP">.01 cents</label>&nbsp;x&nbsp;
+    <input id="TBPqty" type="text" />&nbsp;
+    <span id="DivErrorTBPqty" class="errorMessage"></span>
+    <br />
+    <br />
+    <div id="DivMessage" class="center"></div>
+    <br />
+	<div class="center">
+    <input id="BtnShowChoices" type="button" value="Show Choices" />
+    <input id="BtnClearAllChoices" type="button" value="Clear All Choices" />
+	</div>
+	</div>
+		<div class="center"><a href="index.html">back to index</a></div>
+    <script src="scripts/jquery-2.1.1.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            //an onload event for the page.
+            $("input:text").attr("disabled", true); //disable text boxes on page load
+        });
+        $("#BtnShowChoices").click(function () {
+            Validate();
+        });
+        $("#BtnClearAllChoices").click(function () {
+            $("input:checkbox").attr("checked", false);
+            $("input:radio").attr("checked", false);
+            $("input:text").val("");
+            $("#DivMessage").html("");
+            $(".errorMessage").html("");
+            $("input:text").attr("disabled", true);
+        });
+        $("input:checkbox").change(function () { //When checkbox is checked or unchecked
+            if (this.checked) {
+                $("#" + this.name).removeAttr("disabled");
+                $("#" + this.name).focus();
+            }
+            else {
+                $("#" + this.name).val("");
+                $("#" + this.name).attr("disabled", true);
+                $("#DivError" + this.name).html("");
+            }
+        });
+        function Validate() {
+			var valid=true;
+			$("#DivMessage").html("");
+            $(".errorMessage").html("");
+            var money = parseFloat($("input:radio[name='RGmoney']:checked").val());
+            if (isNaN(money))
+                money = 0;
+            var coins = 0;
+            $("input:checkbox:checked").each(function () {
+                if ($("#" + this.name).val().length == 0){
+                    $("#DivError" + this.name).html("Please enter a quantity");
+					valid=false;
+				}
+                else if (isNaN($("#" + this.name).val())) {
+                    $("#DivError" + this.name).html("Please enter a valid number for quantity");
+					valid=false;
+				}
+                else if (parseFloat($("#" + this.name).val())<=0) {
+                    $("#DivError" + this.name).html("Please enter a quantity greater than zero.");
+					valid=false;
+				}
+				else if ((parseFloat($("#" + this.name).val())-parseInt($("#" + this.name).val()))!=0) {
+					$("#DivError" + this.name).html("Please enter a whole number for the quantity.");
+					valid=false;
+				}
+                else{
+                    coins += parseFloat(this.value) * parseFloat($("#" + this.name).val());
+				}
+            });
+            var total = money + coins;
+			if (valid)
+				$("#DivMessage").html("Your total is: $ " + total.toFixed(2));
+        }
+    </script>
+</body>
+</html>
